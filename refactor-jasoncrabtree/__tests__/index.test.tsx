@@ -9,7 +9,3 @@ vi.mock('next/font/google', () => ({
 test('should pass', () => {
     expect(true).toBe(true)
 })
-
-test('should fail', () => {
-    expect(true).toBe(false)
-})
