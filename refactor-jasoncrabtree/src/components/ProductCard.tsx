@@ -1,8 +1,28 @@
-const ProductCard = () => {
+import { ProductCardTypes } from "@/types/types"
+
+const ProductCard = ({
+    name,
+    price,
+    currency,
+    type
+}: ProductCardTypes): JSX.Element => {
     return (
-        <div>
-            <p>ProductCard</p>
-        </div>
+        <li>
+            <p>
+                {name}
+            </p>
+            <p>
+                <span>
+                    {currency}
+                </span>
+                <span>
+                    {price}
+                </span>
+            </p>
+            <span>
+                {type}
+            </span>
+        </li>
     )
 }
 

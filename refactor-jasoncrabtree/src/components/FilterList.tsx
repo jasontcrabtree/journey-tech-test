@@ -1,8 +1,20 @@
-const FilterList = () => {
+const FilterList = ({ filterOptions }: { filterOptions: string[] }): JSX.Element | null => {
+    if (!filterOptions) {
+        return null
+    }
+
     return (
-        <div>
-            <p>FilterList</p>
-        </div>
+        <ul role="filter">
+            {filterOptions.map((option, index) => {
+                return (
+                    <li key={index}>
+                        <button>
+                            {option}
+                        </button>
+                    </li>
+                )
+            })}
+        </ul>
     )
 }
 

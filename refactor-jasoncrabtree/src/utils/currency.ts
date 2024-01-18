@@ -13,7 +13,7 @@ export const currencyRates = [
   },
 ];
 
-export const calculateExchangeRate = (currency: string): number => {
+export const calculateExchangeRate = (currency: string | number): number => {
   return (
     currencyRates.find(
       (rate: { currency: string }) => rate.currency === currency
