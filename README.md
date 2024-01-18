@@ -1,6 +1,10 @@
 # Journey Technical Test
 
-Product list code refactor from Vanilla JS with Bootstrap Styling to NextJS with the Pages Router using TypeScript, Vitest, and reusable components
+Product list code refactor from Vanilla JS with Bootstrap Styling to NextJS with the Pages Router using TypeScript, Vitest, and reusable components.
+
+Test coverage reporting using [Codecov](https://about.codecov.io/).
+
+[![codecov](https://codecov.io/gh/jasontcrabtree/journey-tech-test/graph/badge.svg?token=OOXRKRT4MM)](https://codecov.io/gh/jasontcrabtree/journey-tech-test)
 
 ## Local Development
 
@@ -11,19 +15,14 @@ Product list code refactor from Vanilla JS with Bootstrap Styling to NextJS with
 
 ## Test Strategy
 
-Tests focus on how the two core users of end-users and other developers may interact with components and pages in the future
+Tests focus on how the two core users of end-users and other developers may interact with components and pages in the future.
 
-Testing is done with [Vitest](https://vitest.dev/) and [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
+Testing is done with [Vitest](https://vitest.dev/) and [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/).
 
-### User Focused Tests:
+### Tests:
 
-1. Does the product list render the expected number of products
-2. Does each product card display the correct information (Title, price based on selected currency, type)
-3. Does changing the selected currency display an update price
-4. Does selecting a different product type filter visible products
-
-## Test Coverage
-
-Test coverage reporting using Codecov
-
-[![codecov](https://codecov.io/gh/jasontcrabtree/journey-tech-test/graph/badge.svg?token=OOXRKRT4MM)](https://codecov.io/gh/jasontcrabtree/journey-tech-test)
+1. Full app runs with all components rendered
+2. Product list render the expected number of products
+3. Product cards display the correct information (Title, price, currency, type)
+4. Changing the selected currency display an update price
+5. Selecting a different product type filter visible products

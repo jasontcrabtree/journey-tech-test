@@ -2,19 +2,21 @@
 
 # dependencies
 /node_modules
+refactor-jasoncrabtree/node_modules
 /.pnp
 .pnp.js
 .yarn/install-state.gz
 
 # testing
-/coverage
+refactor-jasoncrabtree/coverage
 
 # next.js
-/.next/
-/out/
+# next.js
+refactor-jasoncrabtree/.next/
+refactor-jasoncrabtree/out/
 
 # production
-/build
+refactor-jasoncrabtree/build
 
 # misc
 .DS_Store
@@ -26,11 +28,11 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env*.local
+refactor-jasoncrabtree/.env*.local
 
 # vercel
-.vercel
+refactor-jasoncrabtree/.vercel
 
 # typescript
-*.tsbuildinfo
-next-env.d.ts
+refactor-jasoncrabtree/*.tsbuildinfo
+refactor-jasoncrabtree/next-env.d.ts
