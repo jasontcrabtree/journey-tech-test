@@ -1,6 +1,10 @@
-const FilterList = ({ title, filterOptions, filterHandler }: {
+import clsx from 'clsx';
+import styles from '@/styles/FilterList.module.css'
+
+const FilterList = ({ title, filterOptions, activeOption, filterHandler }: {
     title: string,
     filterOptions: string[],
+    activeOption: string,
     filterHandler: (arg0: string) => void
 }): JSX.Element | null => {
     if (!filterOptions) {
@@ -8,21 +12,28 @@ const FilterList = ({ title, filterOptions, filterHandler }: {
     }
 
     return (
-        <>
-            {title && <span>{title}</span>}
-            <ul role="filter">
+        <div className={styles.content}>
+            {title && <span className={styles.title}>{title}</span>}
+            <ul role="filter" className={styles.list}>
                 {filterOptions.map((option, index) => {
                     return (
                         <li key={index}>
-                            {/* <button onClick={(() => filterHandler([option]))}> */}
-                            <button onClick={() => filterHandler(option)}>
+                            {/* clsx(
+                            variation === "ghost" ? "button-ghost" : ""
+                            ) */}
+                            <button className={clsx(
+                                activeOption === option
+                                    ? `${styles.filterButton} ${styles.active}`
+                                    : styles.filterButton
+                            )}
+                                onClick={() => filterHandler(option)}>
                                 {option}
                             </button>
                         </li>
                     )
                 })}
             </ul>
-        </>
+        </div>
     )
 }
 

@@ -4,7 +4,10 @@ import Head from 'next/head'
 import { Lato } from 'next/font/google'
 import { createContext, useState } from 'react'
 
-const lato = Lato({ weight: "400", subsets: ['latin'], preload: true })
+const lato = Lato({
+  weight: ['400', '700'],
+  subsets: ['latin'], preload: true
+})
 
 
 const defaultCurrencyContext: {

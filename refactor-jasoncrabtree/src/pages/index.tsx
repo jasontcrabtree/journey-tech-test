@@ -10,7 +10,7 @@ import { CurrencyContext } from './_app'
 
 export default function Home({ products }: InferGetStaticPropsType<typeof getStaticProps>): JSX.Element {
   const [productCategory, setProductCategory] = useState('all');
-  const { updateCtx } = useContext(CurrencyContext);
+  const { currencyCtx, updateCtx } = useContext(CurrencyContext);
 
   const updateProductCategory = (category: string) => {
     setProductCategory(category);
@@ -25,19 +25,17 @@ export default function Home({ products }: InferGetStaticPropsType<typeof getSta
   productTypes.unshift('all');
 
   return (
-    <main>
-      <h1>Index page</h1>
-      {/* <h2>
-        {currency}
-      </h2> */}
-      <h2>
-        {productCategory}
-      </h2>
-      <div className="flex flex-row gap-32">
-        <aside className="flex gap-24">
-          <FilterList title="Currencies" filterOptions={currencies} filterHandler={updateCtx} />
-          <FilterList title="Products" filterOptions={productTypes} filterHandler={updateProductCategory} />
+    <main className={styles.main}>
+      <div className={styles.headingBg}>
+        <h1 className={styles.heading}>Journey Refactor</h1>
+        <p>by Jason Crabtree</p>
+      </div>
+      <div className={styles.content}>
+        <aside className={styles.sidebar}>
+          <FilterList title="Currencies" filterOptions={currencies} filterHandler={updateCtx} activeOption={currencyCtx} />
+          <FilterList title="Products" filterOptions={productTypes} filterHandler={updateProductCategory} activeOption={productCategory} />
         </aside>
+        <div className={styles.contentBorder}></div>
         <ProductList products={products} filterByCategory={productCategory} />
       </div>
     </main>

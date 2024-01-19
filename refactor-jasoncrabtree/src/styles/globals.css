@@ -8,6 +8,10 @@
   --mobile-modifier: 0.5;
 }
 
+body {
+  overflow-y: scroll;
+}
+
 .flex {
   display: flex;
   flex-direction: column;

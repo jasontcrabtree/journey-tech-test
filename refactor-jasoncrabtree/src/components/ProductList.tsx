@@ -1,6 +1,8 @@
 import { ProductCardTypes } from "@/types/types";
 import ProductCard from "./ProductCard";
 
+import styles from '@/styles/ProductList.module.css'
+
 type ProductListTypes = {
     products: ProductCardTypes[];
     filterByCategory: string;
@@ -14,7 +16,7 @@ const ProductList = ({ products, filterByCategory }: ProductListTypes): JSX.Elem
     console.log('productCategory', filterByCategory)
 
     return (
-        <ul>
+        <ul className={styles.productList}>
             {products.map((product: ProductCardTypes, index) => {
                 if (filterByCategory === "all"
                     || filterByCategory === product.type) {
