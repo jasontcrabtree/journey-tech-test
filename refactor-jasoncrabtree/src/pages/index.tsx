@@ -1,14 +1,13 @@
-import type { InferGetStaticPropsType } from 'next'
 import FilterList from '@/components/FilterList'
 import ProductList from '@/components/ProductList'
 import styles from '@/styles/Home.module.css'
 import { currencyRates } from '@/utils/currency'
-import { getApiProducts } from '@/utils/data-loading'
+import { getApiProducts, getDBProducts } from '@/utils/data-loading'
 import { ProductCategory, Product } from '@/types/types'
 import { useContext, useState } from 'react'
 import { CurrencyContext } from './_app'
 
-export default function Home({ products }: InferGetStaticPropsType<typeof getServerSideProps>): JSX.Element {
+export default function Home({ products }: any): JSX.Element {
   const [productCategory, setProductCategory] = useState('all');
   const { currencyCtx, updateCtx } = useContext(CurrencyContext);
 
@@ -43,8 +42,9 @@ export default function Home({ products }: InferGetStaticPropsType<typeof getSer
   )
 }
 
-export const getServerSideProps = async () => {
+export const getStaticProps = async () => {
   const { products } = await getApiProducts();
+  // const products = getDBProducts();
 
   return {
     props: {

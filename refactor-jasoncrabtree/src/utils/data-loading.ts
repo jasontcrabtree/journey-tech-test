@@ -52,7 +52,7 @@ export const getDBProducts = () => {
 
 export const getApiProducts = async () => {
   try {
-    const baseUrl = process.env.API_BASE_URL || 'http://localhost:3000';
+    const baseUrl = 'https://journey-tech-test.vercel.app';
     const res = await fetch(`${baseUrl}/api/products`);
 
     if (!res.ok) {
