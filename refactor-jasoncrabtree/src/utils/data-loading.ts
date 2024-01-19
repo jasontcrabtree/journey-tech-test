@@ -51,7 +51,18 @@ export const getDBProducts = () => {
 };
 
 export const getApiProducts = async () => {
-  const res = await fetch('http://localhost:3000/api/products');
-  const data = await res.json();
-  return data;
+  try {
+    const baseUrl = process.env.API_BASE_URL || 'http://localhost:3000';
+    const res = await fetch(`${baseUrl}/api/products`);
+
+    if (!res.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error('Failed to fetch products:', error);
+    throw error;
+  }
 };

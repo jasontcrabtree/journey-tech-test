@@ -36,7 +36,7 @@ export default function Home({ products }: InferGetStaticPropsType<typeof getSta
           <FilterList title="Products" filterOptions={productTypes} filterHandler={updateProductCategory} activeOption={productCategory} />
         </aside>
         <div className={styles.contentBorder}></div>
-        <ProductList products={products} filterByCategory={productCategory} />
+        {products && <ProductList products={products} filterByCategory={productCategory} />}
       </div>
     </main>
   )
