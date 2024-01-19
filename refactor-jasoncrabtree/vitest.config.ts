@@ -10,7 +10,9 @@ export default defineConfig({
       include: ['src/*'],
       exclude: [
         // TS files are imported into react components and tested there, or via static type checking (e.g. types.ts)
-        'src/**/*.ts',
+        'src/**/types.ts', // Type file
+        'src/**/products.ts', // API route fetching data, given more time would be tested with a mock server
+
         //   We exclude standard NextJS core pages as they aren't running any custom logic
         'src/pages/_app.tsx',
         'src/pages/_document.tsx',

@@ -17,7 +17,7 @@ const FilterList = ({ title, filterOptions, activeOption, filterHandler }: {
             <ul role="filter" className={styles.list}>
                 {filterOptions.map((option, index) => {
                     return (
-                        <li key={index}>
+                        <li key={index + option}>
                             <button name={option} className={clsx(
                                 activeOption === option
                                     ? `${styles.filterButton} ${styles.active}`

@@ -1,10 +1,12 @@
 import { expect, test, vi, afterEach } from 'vitest'
 import { render, screen, waitFor, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import IndexPage from '@/pages/index'
+import IndexPage, { getStaticProps } from '@/pages/index'
 import { calculateExchangeRate } from '@/utils/currency'
 import ProductCard from '@/components/ProductCard'
 import ProductList from '@/components/ProductList'
+import FilterList from '@/components/FilterList'
+import * as dataModule from './../src/utils/data-loading';
 
 afterEach(() => {
     cleanup();
@@ -61,6 +63,12 @@ test('product list renders correct number of items', () => {
 
     const renderedItems = container.querySelectorAll('li');
     expect(renderedItems).toHaveLength(mockProductList.length);
+})
+
+test('product list returns null with no produts', () => {
+    render(<ProductList products={[]} filterByCategory='all' />)
+
+    expect(screen.queryAllByRole('listitem')).toHaveLength(0);
 })
 
 test('product card shows name, price, currency, type, with correct currency value', () => {
@@ -130,10 +138,18 @@ test('changing currency changes prices', () => {
     })
 })
 
+test('filter component works individually', () => {
+    render(<FilterList activeOption='phonecase' filterOptions={["tshirt", "lawnmower", "phonecase"]} title='Filters' filterHandler={() => { }} />)
+})
+
 test('changing type filter shows/hides relevant products', () => {
     render(
         <IndexPage productByType={"all"} products={mockProductList} />
     )
+
+    // const updateProductCategory = (category: string) => {
+    //     setProductCategory(category);
+    // }
 
     expect(screen.queryAllByText(mockCurrencies[0])).toBeDefined();
     expect(screen.getAllByText('Product 1')).toBeDefined();
@@ -172,3 +188,26 @@ test('currency util returns correct value', () => {
     expect(calculateExchangeRate('USD')).not.toEqual(mockFailingCurrencyRates.USD);
     expect(calculateExchangeRate('EURO')).not.toEqual(mockFailingCurrencyRates.EURO);
 })
+
+vi.mock('./../src/utils/data-loading', () => ({
+    getApiProducts: vi.fn(() => Promise.resolve({
+        products: {
+            products: [{ id: 1, name: 'Product 1', }],
+            productsByType: {},
+        }
+    })),
+}));
+
+test('getStaticProps fetches products and returns correct props', async () => {
+    const response = await getStaticProps();
+
+    expect(dataModule.getApiProducts).toHaveBeenCalled();
+
+    expect(response).toEqual({
+        props: {
+            products: [{ id: 1, name: 'Product 1' }],
+            productByType: {},
+        },
+        revalidate: 60,
+    });
+});

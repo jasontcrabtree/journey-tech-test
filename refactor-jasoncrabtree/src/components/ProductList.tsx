@@ -9,9 +9,7 @@ type ProductListTypes = {
 }
 
 const ProductList = ({ products, filterByCategory }: ProductListTypes): JSX.Element | null => {
-    if (!products) {
-        return null
-    }
+    if (!products) { return null }
 
     return (
         <ul className={styles.productList}>
@@ -19,7 +17,7 @@ const ProductList = ({ products, filterByCategory }: ProductListTypes): JSX.Elem
                 if (filterByCategory === "all"
                     || filterByCategory === product.type) {
                     return (<ProductCard
-                        key={product.id}
+                        key={product.id + product.name}
                         name={product.name}
                         price={product.price}
                         type={product.type}
