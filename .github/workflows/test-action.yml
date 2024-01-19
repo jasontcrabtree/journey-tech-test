@@ -21,11 +21,15 @@ jobs:
         working-directory: ./refactor-jasoncrabtree
 
       - name: Run tests
-        run: npm run test:ci --coverage
+        run: npm run test:ci -- --coverage
         working-directory: ./refactor-jasoncrabtree
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v3
+      #   env:
+      #     CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      #     directory: ./refactor-jasoncrabtree/coverage
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      - uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           directory: ./refactor-jasoncrabtree/coverage
