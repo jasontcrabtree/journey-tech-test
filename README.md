@@ -10,8 +10,9 @@ Test coverage reporting using [Codecov](https://about.codecov.io/).
 
 1. Download the GitHub repository to your local machine using `gh repo clone https://github.com/jasontcrabtree/journey-tech-test`
 2. Navigate into the refactored folder `cd refactor-jasoncrabtree`
-3. Run the NextJS project `npm run dev`
-4. In a separate terminal window, run `npm run test:coverage` to run Vitest to see test results and code coverage
+3. Install NPM dependencies `npm install`
+4. Run the NextJS project `npm run dev`
+5. In a separate terminal window, run `npm run test:coverage` to run Vitest to see test results and code coverage
 
 ## Test Strategy
 
