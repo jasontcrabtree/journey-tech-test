@@ -19,7 +19,7 @@ Tests focus on how the two core users of end-users and other developers may inte
 
 Testing is done with [Vitest](https://vitest.dev/) and [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/).
 
-### Tests:
+### High-Level Test Info:
 
 1. Full app runs with all components rendered
 2. Product list render the expected number of products

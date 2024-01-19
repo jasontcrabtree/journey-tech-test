@@ -9,7 +9,6 @@ const lato = Lato({
   subsets: ['latin'], preload: true
 })
 
-
 const defaultCurrencyContext: {
   currencyCtx: string;
   updateCtx: (currency: string) => void;

@@ -3,7 +3,7 @@ import { render, screen, waitFor, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import IndexPage, { getStaticProps } from '@/pages/index'
 import { calculateExchangeRate } from '@/utils/currency'
-import ProductCard from '@/components/ProductCard'
+import ProductCard, { renderCurrency } from '@/components/ProductCard'
 import ProductList from '@/components/ProductList'
 import FilterList from '@/components/FilterList'
 import * as dataModule from './../src/utils/data-loading';
@@ -106,6 +106,12 @@ test('product card shows name, price, currency, type, with correct currency valu
     expect(priceNumberValue).toEqual(mockProductCard.price * mockCurrencyRates.NZD);
     expect(priceNumberValue).not.toEqual(mockProductCard.price * mockCurrencyRates.USD);
     expect(priceNumberValue).not.toEqual(mockProductCard.price * mockCurrencyRates.EURO);
+})
+
+test('currency icon shows correct currency symbol', () => {
+    expect(renderCurrency('NZD')?.props.children).toMatch("$");
+    expect(renderCurrency('USD')?.props.children).toMatch("$");
+    expect(renderCurrency('EURO')?.props.children).toMatch("€");
 })
 
 test('changing currency changes prices', () => {
