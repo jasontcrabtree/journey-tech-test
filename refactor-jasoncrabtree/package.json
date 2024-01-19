@@ -10,12 +10,14 @@
     "test": "vitest",
     "test:coverage": "vitest --coverage",
     "test:coverage:ui": "vitest --coverage --ui",
-    "test:ci": "vitest run"
+    "test:ci": "vitest run",
+    "build:repositories": "esbuild ./do-not-refactor/LawnmowerRepository.js --outfile=./compiled/LawnmowerRepository.js --bundle --format=esm --footer:js=\"export default LawnmowerRepository;\" && esbuild ./do-not-refactor/PhoneCaseRepository.js --outfile=./compiled/PhoneCaseRepository.js --bundle --format=esm --footer:js=\"export default PhoneCaseRepository;\" && esbuild ./do-not-refactor/TShirtRepository.js --outfile=./compiled/TShirtRepository.js --bundle --format=esm --footer:js=\"export default TShirtRepository;\""
   },
   "dependencies": {
     "next": "14.0.4",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-icons": "^5.0.1"
   },
   "devDependencies": {
     "@testing-library/react": "^14.1.2",
@@ -26,6 +28,7 @@
     "@vitejs/plugin-react": "^4.2.1",
     "@vitest/coverage-v8": "^1.2.1",
     "@vitest/ui": "^1.2.1",
+    "esbuild": "^0.19.11",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",
     "jsdom": "^23.2.0",

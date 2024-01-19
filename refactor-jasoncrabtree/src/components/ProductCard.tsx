@@ -1,11 +1,15 @@
+import { CurrencyContext } from "@/pages/_app";
 import { ProductCardTypes } from "@/types/types"
+import { calculateExchangeRate } from "@/utils/currency";
+import { useContext } from "react";
 
 const ProductCard = ({
     name,
     price,
-    currency,
     type
 }: ProductCardTypes): JSX.Element => {
+    const { currencyCtx } = useContext(CurrencyContext);
+
     return (
         <li>
             <p>
@@ -13,10 +17,11 @@ const ProductCard = ({
             </p>
             <p>
                 <span>
-                    {currency}
+                    <CgEuro />
+                    {currencyCtx}
                 </span>
                 <span>
-                    {price}
+                    {(price * calculateExchangeRate(currencyCtx)).toFixed(2)}
                 </span>
             </p>
             <span>

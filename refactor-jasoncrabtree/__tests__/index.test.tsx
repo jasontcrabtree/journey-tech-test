@@ -182,29 +182,29 @@ test('currency util returns correct value', () => {
 })
 
 
-// test('Product API call returns products', async () => {
-//     afterEach(() => {
-//         vi.resetAllMocks();
-//     })
+test('Product API call returns products', async () => {
+    afterEach(() => {
+        vi.resetAllMocks();
+    })
 
-//     // const mockApiProducts = getProducts.mockResolvedValue([{
-//     //     name: "Product 1",
-//     //     price: 10,
-//     //     currency: "NZD",
-//     //     type: 'T-Shirt'
-//     // }]);
+    const mockApiProducts = getProducts.mockResolvedValue([{
+        name: "Product 1",
+        price: 10,
+        currency: "NZD",
+        type: 'T-Shirt'
+    }]);
 
-//     // vi.mocked(ProductsApi.getProducts).mockResolvedValue([{ name: "Product 1", price: 10, currency: "NZD", type: 'T-Shirt' }]);
+    // vi.mocked(ProductsApi.getProducts).mockResolvedValue([{ name: "Product 1", price: 10, currency: "NZD", type: 'T-Shirt' }]);
 
-//     const mockApiProducts = vi.mocked(getProducts).mockResolvedValue([{ name: "Product 1", price: 10, currency: "NZD", type: 'T-Shirt' }]);
+    // const mockApiProducts = vi.mocked(getProducts).mockResolvedValue([{ name: "Product 1", price: 10, currency: "NZD", type: 'T-Shirt' }]);
 
-//     // console.log('mockApiProduct', mockApiProducts);
+    // console.log('mockApiProduct', mockApiProducts);
 
-//     render(<ProductList products={mockApiProducts} />)
+    render(<ProductList products={mockApiProducts} />)
 
-//     await waitFor(() => {
-//         const renderedList = screen.getByRole('list');
-//         expect(renderedList).toHaveLength(mockApiProducts.length);
-//         expect(screen.getByText(mockApiProducts.name)).toBeDefined();
-//     })
-// })
+    waitFor(() => {
+        const renderedList = screen.getByRole('list');
+        expect(renderedList).toHaveLength(mockApiProducts.length);
+        expect(screen.getByText(mockApiProducts.name)).toBeDefined();
+    })
+})
