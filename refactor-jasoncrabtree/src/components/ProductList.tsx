@@ -13,15 +13,13 @@ const ProductList = ({ products, filterByCategory }: ProductListTypes): JSX.Elem
         return null
     }
 
-    console.log('productCategory', filterByCategory)
-
     return (
         <ul className={styles.productList}>
-            {products.map((product: ProductCardTypes, index) => {
+            {products.map((product: ProductCardTypes) => {
                 if (filterByCategory === "all"
                     || filterByCategory === product.type) {
                     return (<ProductCard
-                        key={index}
+                        key={product.id}
                         name={product.name}
                         price={product.price}
                         type={product.type}

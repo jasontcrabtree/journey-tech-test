@@ -18,15 +18,14 @@ const FilterList = ({ title, filterOptions, activeOption, filterHandler }: {
                 {filterOptions.map((option, index) => {
                     return (
                         <li key={index}>
-                            {/* clsx(
-                            variation === "ghost" ? "button-ghost" : ""
-                            ) */}
-                            <button className={clsx(
+                            <button name={option} className={clsx(
                                 activeOption === option
                                     ? `${styles.filterButton} ${styles.active}`
                                     : styles.filterButton
                             )}
-                                onClick={() => filterHandler(option)}>
+                                onClick={() => {
+                                    filterHandler(option)
+                                }}>
                                 {option}
                             </button>
                         </li>

@@ -36,7 +36,6 @@ const ProductCard = ({
                 {renderCurrency(currencyCtx)}
                 {(price * calculateExchangeRate(currencyCtx)).toFixed(2)}{' '}{currencyCtx}
             </p>
-
         </li>
     )
 }

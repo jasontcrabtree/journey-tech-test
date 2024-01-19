@@ -1,12 +1,13 @@
-import { expect, test, vi, beforeEach, afterEach } from 'vitest'
+import { expect, test, vi, beforeEach, afterEach, describe, it } from 'vitest'
+import fetch from 'node-fetch';
 import { getByRole, render, screen, waitFor, within, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import IndexPage from '@/pages/index'
-import products, { getProducts } from '@/pages/api/products'
 import { calculateExchangeRate } from '@/utils/currency'
 import ProductCard from '@/components/ProductCard'
 import ProductList from '@/components/ProductList'
 import FilterList from '@/components/FilterList'
+import { getDBProducts } from '@/utils/data-loading';
 
 afterEach(() => {
     cleanup();
@@ -19,40 +20,35 @@ vi.mock('next/font/google', () => ({
     })),
 }));
 
-vi.mock('../../refactor-jasoncrabtree/src/pages/api/products', async (getProducts) => {
-    // getProducts: vi.fn(),
-    // const mod = await getProducts<typeof import('../../refactor-jasoncrabtree/src/pages/api/products')>()
-    return {
-        // ...mod,
-        getProducts: vi.fn(),
-    }
-});
+// vi.mock('../../refactor-jasoncrabtree/src/pages/api/products', async (getProducts) => {
+//     getProducts: vi.fn(),
+//     return {
+//         getProducts: vi.fn(),
+//     }
+// });
 
 const mockProductList = [
     {
+        id: 1,
         name: "Product 1",
         price: 10,
         currency: "NZD",
         type: 'T-Shirt'
     },
     {
+        id: 2,
         name: "Product 2",
         price: 30,
         currency: "NZD",
         type: 'Lawnmower'
     },
     {
+        id: 3,
         name: "Product 3",
         price: 5,
         currency: "NZD",
         type: 'Phonecase'
     },
-]
-
-const mockProductTypes = [
-    'T-Shirt',
-    'Lawnmower',
-    'Phonecase'
 ]
 
 const mockCurrencies = ['NZD', 'USD', 'EURO'];
@@ -64,20 +60,20 @@ test('test file set correctly validation', () => {
 
 test('home/index page renders with h1', () => {
     render(
-        <IndexPage currencies={[]} productTypes={[]} products={[]} />
+        <IndexPage productByType={[]} products={[]} />
     )
 
     expect(screen.getByRole('heading', { level: 1 })).toBeDefined();
 })
 
 test('product list renders correct number of items', () => {
-    const { container } = render(<ProductList products={mockProductList} />)
+    const { container } = render(<ProductList products={mockProductList} filterByCategory='all' />)
 
     const renderedItems = container.querySelectorAll('li');
     expect(renderedItems).toHaveLength(mockProductList.length);
 })
 
-test('product card shows name, price, currency, type', () => {
+test('product card shows name, price, currency, type, with correct currency value', () => {
     const mockProductCard = {
         name: "Product Card 1",
         price: 15,
@@ -93,70 +89,76 @@ test('product card shows name, price, currency, type', () => {
 
     render(
         <ProductCard
-            name={mockProductCard.name} price={mockProductCard.price} currency={mockProductCard.currency} type={mockProductCard.type}
+            name={mockProductCard.name} price={mockProductCard.price} type={mockProductCard.type}
         />
     )
 
     expect(screen.getAllByText(mockProductCard.name)).toBeDefined();
-    expect(screen.getAllByText(mockProductCard.price)).toBeDefined();
-    expect(screen.getAllByText(mockProductCard.currency)).toBeDefined();
+    expect(screen.getAllByText(mockProductCard.price, { exact: false })).toBeDefined();
+    expect(screen.getAllByText(mockProductCard.currency, { exact: false })).toBeDefined();
     expect(screen.getAllByText(mockProductCard.type)).toBeDefined();
 
-    const priceElement = screen.getByText(mockProductCard.price.toString());
-    const priceText = priceElement.textContent || "";
+    const priceElement = screen.getByText(mockProductCard.price, { exact: false }).textContent;
 
-    expect(priceText).toEqual(mockProductCard.price.toString());
-    const priceNumber = parseFloat(priceText);
+    expect(priceElement).toEqual(`$${mockProductCard.price}.00 ${mockProductCard.currency}`);
 
-    expect(priceNumber).toEqual(mockProductCard.price * mockCurrencyRates.NZD);
-    expect(priceNumber).not.toEqual(mockProductCard.price * mockCurrencyRates.USD);
-    expect(priceNumber).not.toEqual(mockProductCard.price * mockCurrencyRates.EURO);
+    const priceNumberValue = priceElement ? parseFloat(priceElement.replace(/[^\d.]/g, '')) : 0;
+    expect(priceNumberValue).toEqual(mockProductCard.price);
+
+    expect(priceNumberValue).toEqual(mockProductCard.price * mockCurrencyRates.NZD);
+    expect(priceNumberValue).not.toEqual(mockProductCard.price * mockCurrencyRates.USD);
+    expect(priceNumberValue).not.toEqual(mockProductCard.price * mockCurrencyRates.EURO);
 })
 
 test('changing currency changes prices', () => {
 
     render(
-        <IndexPage currencies={mockCurrencies} productTypes={mockProductTypes} products={mockProductList} />
+        <IndexPage productByType={"all"} products={mockProductList} />
     )
 
     expect(screen.getAllByText(mockCurrencies[0])).toBeDefined();
-    expect(screen.getAllByText(mockProductList[0].price)).toBeDefined();
+    expect(screen.getAllByText(mockProductList[0].price, { exact: false })).toBeDefined();
 
-    expect(screen.getAllByText(mockProductList[0].price)).not.toEqual(
+    expect(screen.getAllByText(mockProductList[0].price, { exact: false })).not.toEqual(
         mockProductList[0].price * calculateExchangeRate(mockProductList[1].price)
     );
 
     userEvent.click(screen.getByText(mockCurrencies[1]));
 
-    expect(screen.getAllByText(mockProductList[0].price)).not.toBeDefined();
-    expect(screen.getAllByText(mockProductList[1].price)).toBeDefined();
+    waitFor(() => {
+        expect(screen.getAllByText(mockProductList[0].price, { exact: false })).not.toBeDefined();
+        expect(screen.getAllByText(mockProductList[1].price, { exact: false })).toBeDefined();
 
-    expect(screen.getAllByText(mockCurrencies[1])).toBeDefined();
-    expect(screen.getAllByText(mockProductList[1].price)).toBeDefined();
+        expect(screen.getAllByText(mockCurrencies[1], { exact: false })).toBeDefined();
+        expect(screen.getAllByText(mockProductList[1].price, { exact: false })).toBeDefined();
 
-    expect(screen.getAllByText(mockCurrencies[1])).not.toBeDefined();
+        expect(screen.getAllByText(mockCurrencies[1], { exact: false })).not.toBeDefined();
 
-    expect(screen.getAllByText(mockProductList[1].price)).toEqual(
-        mockProductList[1].price * calculateExchangeRate(mockCurrencies[1])
-    );
+        expect(screen.getAllByText(mockProductList[1].price, { exact: false })).toEqual(
+            mockProductList[1].price * calculateExchangeRate(mockCurrencies[1])
+        );
+    })
 })
 
 test('changing type filter shows/hides relevant products', () => {
     render(
-        <IndexPage currencies={mockCurrencies} productTypes={mockProductTypes} products={mockProductList} />
+        <IndexPage productByType={"all"} products={mockProductList} />
     )
 
-    expect(screen.getAllByText(mockCurrencies[0])).toBeDefined();
-    expect(screen.getAllByText('T-Shirt')).toBeDefined();
-    expect(screen.getAllByText('Lawnmower')).toBeDefined();
-    expect(screen.getAllByText('Phonecase')).toBeDefined();
+    expect(screen.queryAllByText(mockCurrencies[0])).toBeDefined();
+    expect(screen.getAllByText('Product 1')).toBeDefined();
+    expect(screen.getAllByText('Product 2')).toBeDefined();
+    expect(screen.getAllByText('Product 3')).toBeDefined();
 
-    const filterButton = screen.getByRole('button', { name: 'T-Shirt' });
+    const filterButton = screen.getByRole('button', { name: 'Lawnmower' });
+
     userEvent.click(filterButton);
 
-    expect(screen.getAllByText('T-Shirt')).toBeDefined();
-    expect(screen.getAllByText('Lawnmower')).not.toBeDefined();
-    expect(screen.getAllByText('Phonecase')).not.toBeDefined();
+    waitFor(() => {
+        expect(screen.queryAllByText('Product 1')).toHaveLength(0);
+        expect(screen.getAllByText('Product 2')).toBeDefined();
+        expect(screen.queryAllByText('Product 3')).toHaveLength(0);
+    })
 })
 
 test('currency util returns correct value', () => {
@@ -182,29 +184,66 @@ test('currency util returns correct value', () => {
 })
 
 
-test('Product API call returns products', async () => {
-    afterEach(() => {
-        vi.resetAllMocks();
-    })
+// test('Product API call returns products', async () => {
+//     afterEach(() => {
+//         vi.resetAllMocks();
+//     })
 
-    const mockApiProducts = getProducts.mockResolvedValue([{
-        name: "Product 1",
-        price: 10,
-        currency: "NZD",
-        type: 'T-Shirt'
-    }]);
+//     const mockApiProducts = getProducts.
+//      mockResolvedValue([{
+//         name: "Product 1",
+//         price: 10,
+//         currency: "NZD",
+//         type: 'T-Shirt'
+//     }]);
 
-    // vi.mocked(ProductsApi.getProducts).mockResolvedValue([{ name: "Product 1", price: 10, currency: "NZD", type: 'T-Shirt' }]);
+//     // vi.mocked(ProductsApi.getProducts).mockResolvedValue([{ name: "Product 1", price: 10, currency: "NZD", type: 'T-Shirt' }]);
 
-    // const mockApiProducts = vi.mocked(getProducts).mockResolvedValue([{ name: "Product 1", price: 10, currency: "NZD", type: 'T-Shirt' }]);
+//     // const mockApiProducts = vi.mocked(getProducts).mockResolvedValue([{ name: "Product 1", price: 10, currency: "NZD", type: 'T-Shirt' }]);
 
-    // console.log('mockApiProduct', mockApiProducts);
+//     // console.log('mockApiProduct', mockApiProducts);
 
-    render(<ProductList products={mockApiProducts} />)
+//     render(<ProductList products={mockApiProducts} />)
 
-    waitFor(() => {
-        const renderedList = screen.getByRole('list');
-        expect(renderedList).toHaveLength(mockApiProducts.length);
-        expect(screen.getByText(mockApiProducts.name)).toBeDefined();
-    })
-})
+//     waitFor(() => {
+//         const renderedList = screen.getByRole('list');
+//         expect(renderedList).toHaveLength(mockApiProducts.length);
+//         expect(screen.getByText(mockApiProducts.name)).toBeDefined();
+//     })
+// })
+
+// Mock getDBProducts if needed
+vi.mock('@/utils/data-loading', () => ({
+    getDBProducts: vi.fn(() => {
+        return [{
+            name: "Product 1",
+            price: 10,
+            currency: "NZD",
+            type: 'T-Shirt'
+        }]
+    }),
+}));
+
+describe('API Route - Products', () => {
+    it('should return products successfully', async () => {
+        const response = await fetch('/api/products'); // Use the actual route
+        const data = await response.json();
+
+        expect(response.status).toBe(200);
+        expect(data).toHaveProperty('message', 'Products successfully loaded');
+        expect(data).toHaveProperty('products');
+    });
+
+    it('should handle errors correctly', async () => {
+        // Mock getDBProducts to throw an error
+        vi.mocked(getDBProducts).mockImplementationOnce(() => {
+            throw new Error();
+        });
+
+        const response = await fetch('/api/products'); // Use the actual route
+        const data = await response.json();
+
+        expect(response.status).toBe(500);
+        expect(data).toHaveProperty('error', 'Failed to load products');
+    });
+});

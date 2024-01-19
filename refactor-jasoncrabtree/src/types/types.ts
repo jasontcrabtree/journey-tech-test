@@ -1,4 +1,5 @@
 export interface ProductCardTypes {
+  id?: number;
   name: string;
   price: number;
   type: string;
@@ -11,7 +12,6 @@ export type IndexPageTypes = {
 };
 
 export interface Product extends ProductCardTypes {
-  id: number;
   [key: string]: any; // unknown ahead of time additional properties (product specific)
 }
 
