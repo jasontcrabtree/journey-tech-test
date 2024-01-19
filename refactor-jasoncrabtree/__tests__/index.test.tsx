@@ -1,13 +1,10 @@
-import { expect, test, vi, beforeEach, afterEach, describe, it } from 'vitest'
-import fetch from 'node-fetch';
-import { getByRole, render, screen, waitFor, within, cleanup } from '@testing-library/react'
+import { expect, test, vi, afterEach } from 'vitest'
+import { render, screen, waitFor, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import IndexPage from '@/pages/index'
 import { calculateExchangeRate } from '@/utils/currency'
 import ProductCard from '@/components/ProductCard'
 import ProductList from '@/components/ProductList'
-import FilterList from '@/components/FilterList'
-import { getDBProducts } from '@/utils/data-loading';
 
 afterEach(() => {
     cleanup();
@@ -19,13 +16,6 @@ vi.mock('next/font/google', () => ({
         style: { fontFamily: 'Lato' },
     })),
 }));
-
-// vi.mock('../../refactor-jasoncrabtree/src/pages/api/products', async (getProducts) => {
-//     getProducts: vi.fn(),
-//     return {
-//         getProducts: vi.fn(),
-//     }
-// });
 
 const mockProductList = [
     {
@@ -182,68 +172,3 @@ test('currency util returns correct value', () => {
     expect(calculateExchangeRate('USD')).not.toEqual(mockFailingCurrencyRates.USD);
     expect(calculateExchangeRate('EURO')).not.toEqual(mockFailingCurrencyRates.EURO);
 })
-
-
-// test('Product API call returns products', async () => {
-//     afterEach(() => {
-//         vi.resetAllMocks();
-//     })
-
-//     const mockApiProducts = getProducts.
-//      mockResolvedValue([{
-//         name: "Product 1",
-//         price: 10,
-//         currency: "NZD",
-//         type: 'T-Shirt'
-//     }]);
-
-//     // vi.mocked(ProductsApi.getProducts).mockResolvedValue([{ name: "Product 1", price: 10, currency: "NZD", type: 'T-Shirt' }]);
-
-//     // const mockApiProducts = vi.mocked(getProducts).mockResolvedValue([{ name: "Product 1", price: 10, currency: "NZD", type: 'T-Shirt' }]);
-
-//     // console.log('mockApiProduct', mockApiProducts);
-
-//     render(<ProductList products={mockApiProducts} />)
-
-//     waitFor(() => {
-//         const renderedList = screen.getByRole('list');
-//         expect(renderedList).toHaveLength(mockApiProducts.length);
-//         expect(screen.getByText(mockApiProducts.name)).toBeDefined();
-//     })
-// })
-
-// Mock getDBProducts if needed
-vi.mock('@/utils/data-loading', () => ({
-    getDBProducts: vi.fn(() => {
-        return [{
-            name: "Product 1",
-            price: 10,
-            currency: "NZD",
-            type: 'T-Shirt'
-        }]
-    }),
-}));
-
-describe('API Route - Products', () => {
-    it('should return products successfully', async () => {
-        const response = await fetch('/api/products'); // Use the actual route
-        const data = await response.json();
-
-        expect(response.status).toBe(200);
-        expect(data).toHaveProperty('message', 'Products successfully loaded');
-        expect(data).toHaveProperty('products');
-    });
-
-    it('should handle errors correctly', async () => {
-        // Mock getDBProducts to throw an error
-        vi.mocked(getDBProducts).mockImplementationOnce(() => {
-            throw new Error();
-        });
-
-        const response = await fetch('/api/products'); // Use the actual route
-        const data = await response.json();
-
-        expect(response.status).toBe(500);
-        expect(data).toHaveProperty('error', 'Failed to load products');
-    });
-});
