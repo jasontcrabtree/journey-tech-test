@@ -1,7 +1,7 @@
 import { expect, test, vi, afterEach } from 'vitest'
 import { render, screen, waitFor, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import IndexPage, { getStaticProps } from '@/pages/index'
+import IndexPage, { getServerSideProps } from '@/pages/index'
 import { calculateExchangeRate } from '@/utils/currency'
 import ProductCard, { renderCurrency } from '@/components/ProductCard'
 import ProductList from '@/components/ProductList'
@@ -205,7 +205,7 @@ vi.mock('./../src/utils/data-loading', () => ({
 }));
 
 test('getStaticProps fetches products and returns correct props', async () => {
-    const response = await getStaticProps();
+    const response = await getServerSideProps();
 
     expect(dataModule.getApiProducts).toHaveBeenCalled();
 
