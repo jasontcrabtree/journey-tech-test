@@ -1,19 +1,26 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { getDBProducts } from '@/utils/data-loading';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 type Data = {
-  name: string;
-};
-
-export const getProducts = async () => {
-  const res = await fetch('https://fakestoreapi.com/products');
-  const products = await res.json();
-  return products;
+  message?: string;
+  products?: {};
+  error?: string;
 };
 
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  res.status(200).json({ name: 'John Doe' });
+  try {
+    const productData = getDBProducts();
+
+    res.status(200).json({
+      message: 'Products successfully loaded',
+      products: productData,
+    });
+  } catch (err) {
+    res.status(500).json({
+      error: 'Failed to load products',
+    });
+  }
 }
