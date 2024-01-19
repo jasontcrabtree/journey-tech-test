@@ -8,7 +8,7 @@ import { ProductCategory, Product } from '@/types/types'
 import { useContext, useState } from 'react'
 import { CurrencyContext } from './_app'
 
-export default function Home({ }: InferGetStaticPropsType<typeof getStaticProps>): JSX.Element {
+export default function Home({ products }: InferGetStaticPropsType<typeof getStaticProps>): JSX.Element {
   const [productCategory, setProductCategory] = useState('all');
   const { currencyCtx, updateCtx } = useContext(CurrencyContext);
 
@@ -17,12 +17,13 @@ export default function Home({ }: InferGetStaticPropsType<typeof getStaticProps>
   }
 
   const currencies = currencyRates.map((currency) => currency.currency)
-  // const productTypes = Array.from<string>(
-  //   new Set(products.map(
-  //     (product: Product) => product.type
-  //   ))
-  // );}
-  // productTypes.unshift('all');
+  const productTypes = Array.from<string>(
+    new Set(products.map(
+      (product: Product) => product.type
+    ))
+  );
+
+  productTypes.unshift('all');
 
   return (
     <main className={styles.main}>
@@ -33,22 +34,22 @@ export default function Home({ }: InferGetStaticPropsType<typeof getStaticProps>
       <div className={styles.content}>
         <aside className={styles.sidebar}>
           <FilterList title="Currencies" filterOptions={currencies} filterHandler={updateCtx} activeOption={currencyCtx} />
-          {/* <FilterList title="Products" filterOptions={productTypes} filterHandler={updateProductCategory} activeOption={productCategory} /> */}
+          <FilterList title="Products" filterOptions={productTypes} filterHandler={updateProductCategory} activeOption={productCategory} />
         </aside>
         <div className={styles.contentBorder}></div>
-        {/* {products && <ProductList products={products} filterByCategory={productCategory} />} */}
+        {products && <ProductList products={products} filterByCategory={productCategory} />}
       </div>
     </main>
   )
 }
 
 export const getStaticProps = async () => {
-  // const { products } = await getApiProducts();
+  const { products } = await getApiProducts();
 
   return {
     props: {
-      // products: products.products,
-      // productByType: products.productsByType,
+      products: products.products,
+      productByType: products.productsByType,
     },
     revalidate: 60,
   }
