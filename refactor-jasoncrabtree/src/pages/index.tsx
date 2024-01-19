@@ -8,7 +8,7 @@ import { ProductCategory, Product } from '@/types/types'
 import { useContext, useState } from 'react'
 import { CurrencyContext } from './_app'
 
-export default function Home({ products }: InferGetStaticPropsType<typeof getStaticProps>): JSX.Element {
+export default function Home({ products }: InferGetStaticPropsType<typeof getServerSideProps>): JSX.Element {
   const [productCategory, setProductCategory] = useState('all');
   const { currencyCtx, updateCtx } = useContext(CurrencyContext);
 
@@ -43,7 +43,7 @@ export default function Home({ products }: InferGetStaticPropsType<typeof getSta
   )
 }
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
   const { products } = await getApiProducts();
 
   return {
