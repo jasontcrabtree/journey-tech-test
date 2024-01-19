@@ -44,7 +44,6 @@ export default function Home({ products }: any): JSX.Element {
 
 export const getStaticProps = async () => {
   const { products } = await getApiProducts();
-  // const products = getDBProducts();
 
   return {
     props: {
